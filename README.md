@@ -1,6 +1,6 @@
 # RedisTools
 
-TODO: Write a gem description
+A few command line derivations from the Redis command set.
 
 ## Installation
 
@@ -18,7 +18,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+From the command line:
+
+```bash
+$ rpush -l urls "http://www.heroku.com"
+$ blpop -l urls
+http://www.heroku.com
+```
 
 ## Contributing
 
