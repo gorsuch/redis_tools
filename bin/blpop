@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+require 'redis_tools'
+
+opts = {}
+ARGV.options do |o|
+  o.banner = 'Usage: blpop -l <list> -u [redis url]'
+  o.on("-l", "--list LIST", "list to lpop from") { |l| opts[:list] = l }
+  o.on("-u", "--url REDIS_URL", "url for redis connection") { |u| opts[:url] = u }
+  o.parse!
+ 
+  opts[:url] ||= ENV['REDIS_URL'] || 'redis://localhost:6379'
+
+  abort("Missing -l\n\n#{o}") unless opts[:list]
+
+  redis = Redis.connect(url: opts[:url])
+
+  loop do
+    puts redis.blpop(opts[:list], 0).last
+  end
+end

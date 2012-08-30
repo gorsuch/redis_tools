@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+require 'redis_tools'
+
+opts = {}
+ARGV.options do |o|
+  o.banner = 'Usage: rpush -l <list> -u [redis url] [input]'
+  o.on("-l", "--list LIST", "list to push input onto") { |l| opts[:list] = l }
+  o.on("-u", "--url REDIS_URL", "url for redis connection") { |u| opts[:url] = u }
+  o.parse!
+ 
+  opts[:url] ||= ENV['REDIS_URL'] || 'redis://localhost:6379'
+
+  abort("Missing -l\n\n#{o}") unless opts[:list]
+
+  redis = Redis.connect(url: opts[:url])
+  input = ARGV.shift
+
+  if input
+    redis.rpush(opts[:list], input)
+  else
+    ARGF.each_line do |input|
+      redis.rpush(opts[:list], input)
+    end
+  end
+end
