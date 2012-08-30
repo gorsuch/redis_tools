@@ -15,14 +15,13 @@ ARGV.options do |o|
 
   abort("Missing -l\n\n#{o}") unless opts[:list]
 
-  redis = Redis.connect(url: opts[:url])
   input = ARGV.shift
 
   if input
-    redis.rpush(opts[:list], input)
+    RedisTools.rpush(opts[:list], input)
   else
     ARGF.each_line do |input|
-      redis.rpush(opts[:list], input)
+      RedisTools.rpush(opts[:list], input)
     end
   end
 end
